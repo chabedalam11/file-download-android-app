@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bgray">#E2E2E2</color>
+    <color name="blue_transparent"> #00A0FE</color>
+    <color name="white">#FFFFFF</color>
+    <color name="asa">#767676</color>
+    <color name="committee">#3773BB</color>
+    <color name="subcommittee">#31859C</color>
+    <color name="date">#7F7F7F</color>
+    <color name="akasi">#7DEFCD</color>
+    <color name="asabase">#D8D8D8</color>
+    <color name="listview">#EFEFEF</color>
+    <color name="black">#000000</color>
+</resources>
