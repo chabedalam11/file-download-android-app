@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fajlehrabbi.appmcci.Adapter.CustomAdapter;
@@ -31,6 +32,7 @@ public class Home extends AppCompatActivity {
     ArrayList<ComLists> comlists;
     private String username, token;
     ListView listView;
+    TextView home,logout;
     //private ImageView imgContinue,imgContinue1,imgContinue2,imgContinue3;
     private static CustomAdapter adapter;
     Context con;
@@ -40,8 +42,12 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         con = this;
         listView=(ListView)findViewById(R.id.list);
+        home=(TextView)findViewById(R.id.home);
+        logout=(TextView)findViewById(R.id.logout);
+
         username = PersistData.getStringData(con, AppConstant.user_name);
         token = PersistData.getStringData(con, AppConstant.API_TOKEN);
+
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<AllCatSubCatFiles> call = apiService.showlist(username, token);
         call.enqueue(new Callback<AllCatSubCatFiles>() {
@@ -50,10 +56,10 @@ public class Home extends AppCompatActivity {
                 final AllCatSubCatFiles mr = response.body();
                 if (mr.getStatus().equalsIgnoreCase("true")) {
                     ArrayList<ComLists> committee_list = mr.getData().getCommittee_list();
-                    Log.d(TAG,"<<<<<<<<<<<<<<<<<<< output >>>>>>>>>>>>>>>>>");
+                    /*Log.d(TAG,"<<<<<<<<<<<<<<<<<<< output >>>>>>>>>>>>>>>>>");
                     for (ComLists lists:committee_list){
                         Log.d(TAG,lists.getCat_name());
-                    }
+                    }*/
                     adapter= new CustomAdapter(mr.getData().getCommittee_list(),getApplicationContext());
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -87,11 +93,29 @@ public class Home extends AppCompatActivity {
                 }
             }
 
-
             @Override
             public void onFailure(Call<AllCatSubCatFiles> call, Throwable t) {
                 // Log error here since request failed
-                Log.e("ChatingActivity ", t.toString());
+                Log.e(TAG, t.toString());
+            }
+        });
+
+        /*home button*/
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(con, "Click saHome", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*logout button*/
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PersistData.setStringData(con, AppConstant.API_TOKEN, "");
+                PersistData.setStringData(con, AppConstant.password, "");
+                startActivity(new Intent(con, MainActivity.class));
+                finish();
             }
         });
 

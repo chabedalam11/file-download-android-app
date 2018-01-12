@@ -7,10 +7,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fajlehrabbi.appmcci.Adapter.CustomAdapter;
+import com.example.fajlehrabbi.appmcci.Model.AllCatSubCatFiles;
+import com.example.fajlehrabbi.appmcci.Model.ComLists;
+import com.example.fajlehrabbi.appmcci.Model.FileLists;
 import com.example.fajlehrabbi.appmcci.Model.SigninResponse;
 import com.example.fajlehrabbi.appmcci.Retrofit.ApiClient;
 import com.example.fajlehrabbi.appmcci.Retrofit.ApiInterface;
@@ -19,14 +26,19 @@ import com.example.fajlehrabbi.appmcci.Utilities.AppConstant;
 import com.example.fajlehrabbi.appmcci.Utilities.PersistData;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView tvSignin, tvForgotPassword;
+    private static final String TAG="MainActivity";
+    private String usernamestore, token;
+    private TextView tvSignin, tvForgotPassword,msg1,msg2;
     private EditText etUserName, etPassword;
+    ProgressBar progressBar;
+    LinearLayout lLayout;
     private String userName, password, device_type;
     // private CheckBox signCheckBox;
     public static MainActivity signinactivity;
@@ -41,18 +53,28 @@ public class MainActivity extends AppCompatActivity {
     }
     public void initUI() {
         tvSignin = (TextView) findViewById(R.id.tvSignIn);
+        msg1 = (TextView) findViewById(R.id.msg1);
+        msg2 = (TextView) findViewById(R.id.msg2);
         //tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         etUserName = (EditText) findViewById(R.id.etName);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        //signCheckBox = (CheckBox) findViewById(R.id.signCheckBox);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        lLayout = (LinearLayout) findViewById(R.id.lLayout);
+        progressBar.setVisibility(View.GONE);
+        lLayout.setVisibility(View.GONE);
 
-        /*// checkbox state set
-        if (PersistData.getStringData(con, AppConstant.isSignin).equalsIgnoreCase("true")) {
-            signCheckBox.setChecked(true);
-        } else {
-            signCheckBox.setChecked(false);
-        }*/
+        usernamestore = PersistData.getStringData(con, AppConstant.user_name);
+        token = PersistData.getStringData(con, AppConstant.API_TOKEN);
 
+        Log.d(TAG,"val >> "+usernamestore+"   and   "
+                +token);
+        if(usernamestore != null &&  !usernamestore.equals("") &&
+                token != null &&  !token.equals("")){
+            progressBar.setVisibility(View.VISIBLE);
+            checkToken(usernamestore,token);
+        }else {
+            lLayout.setVisibility(View.VISIBLE);
+        }
 
         tvSignin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     PersistData.setStringData(con, AppConstant.isSignin, "false");
                 }*/
+               /*if(etUserName.getText().toString().equals("")){
+                   msg1.setText("The user name field is required");
+                   return;
+               }else {
+                   msg1.setText("");
+               }
+               if(etPassword.getText().toString().equals("")){
+                   msg2.setText("The password field is required");
+                   return;
+               }else {
+                   msg2.setText("");
+               }*/
 
                 String firebase_token = PersistData.getStringData(con, AppConstant.firebase_token);
                 Log.e("Firebase TOKEN >>", firebase_token);
@@ -83,13 +117,12 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
     private void checkData() {
-
+        msg1.setText("");
+        msg2.setText("");
         if (TextUtils.isEmpty(etUserName.getText().toString())) {
-            // AlertMessage.showMessage(con, getString(R.string.Status),
-            //getString(R.string.PleaseEnterUserNam));
+            msg1.setText("The user name field is required");
         } else if (TextUtils.isEmpty(etPassword.getText().toString())) {
-            // AlertMessage.showMessage(con, getString(R.string.Status),
-            // getString(R.string.PleaseEnterUserPassword));
+            msg2.setText("The password field is required");
         } else {
             userName = etUserName.getText().toString();
             password = etPassword.getText().toString();
@@ -362,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(con, Home.class));
 
                 } else {
-                    //Toast.makeText(con, sr.getMessage(), Toast.LENGTH_SHORT).show();
+                    msg1.setText("Error in User Name or Password");
                 }
             }
 
@@ -371,6 +404,31 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<SigninResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e("SigninActivity ", t.toString());
+            }
+        });
+    }
+
+
+    private void checkToken(String un,String tkn){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<AllCatSubCatFiles> call = apiService.showlist(un, tkn);
+        call.enqueue(new Callback<AllCatSubCatFiles>() {
+            @Override
+            public void onResponse(Call<AllCatSubCatFiles> call, Response<AllCatSubCatFiles> response) {
+                final AllCatSubCatFiles mr = response.body();
+                if (mr.getStatus().equalsIgnoreCase("true")) {
+                    progressBar.setVisibility(View.GONE);
+                    finish();
+                    startActivity(new Intent(con, Home.class));
+                }else {
+                    lLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllCatSubCatFiles> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
             }
         });
     }
