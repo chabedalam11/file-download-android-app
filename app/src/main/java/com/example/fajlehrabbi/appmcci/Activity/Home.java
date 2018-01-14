@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,12 +17,19 @@ import com.example.fajlehrabbi.appmcci.Database.MCCIDBTransaction;
 import com.example.fajlehrabbi.appmcci.Model.AllCatSubCatFiles;
 import com.example.fajlehrabbi.appmcci.Model.ComLists;
 import com.example.fajlehrabbi.appmcci.Model.FileLists;
+import com.example.fajlehrabbi.appmcci.Model.SubComLists;
 import com.example.fajlehrabbi.appmcci.R;
+import com.example.fajlehrabbi.appmcci.Retrofit.ApiClient;
+import com.example.fajlehrabbi.appmcci.Retrofit.ApiInterface;
 import com.example.fajlehrabbi.appmcci.Utilities.AppConstant;
 import com.example.fajlehrabbi.appmcci.Utilities.PersistData;
 import com.example.fajlehrabbi.appmcci.Utils;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Home extends AppCompatActivity {
     private static final String TAG="Home";
@@ -56,10 +64,48 @@ public class Home extends AppCompatActivity {
         //
 
         if(Utils.isInternetConnected(con)){
-            showOnlineData();
+            //showOnlineData();
+            mr = (AllCatSubCatFiles) getIntent().getSerializableExtra("mr");
+            adapter= new CustomAdapter(mr.getData().getCommittee_list(),getApplicationContext());
+            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }else {
-            showOfflineData();
+            //showOfflineData();
+            ArrayList<ComLists> comLists = dbTransaction.getCommList();
+            adapter= new CustomAdapter(comLists,getApplicationContext());
+            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
+
+        /*set Listener in ListView*/
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ComLists comLists = (ComLists) adapterView.getItemAtPosition(i);
+                //Toast.makeText(Home.this, comLists.getId(), Toast.LENGTH_SHORT).show();
+                if(comLists.getId() != null && comLists.getId().equals("1")){
+                    if(Utils.isInternetConnected(con)){
+                        getFile();
+                    }else {
+                        ArrayList<FileLists> file_list=dbTransaction.getFileList();
+                        ArrayList<FileLists> new_file_list = new ArrayList<FileLists>();
+                        for (FileLists file:file_list){
+                            if (file.getCat_id().equals("1")){
+                                new_file_list.add(file);
+                            }
+                        }
+                        Intent intent= new Intent(con,Datee.class);
+                        intent.putExtra("file_list", new_file_list);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }else if(comLists.getId() != null && comLists.getId().equals("2")){
+                    Intent intent= new Intent(con,SubCommittee.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
 
 
         /*home button*/
@@ -101,7 +147,7 @@ public class Home extends AppCompatActivity {
         }
     }
 
-    private void showOnlineData(){
+    /*private void showOnlineData(){
         mr = (AllCatSubCatFiles) getIntent().getSerializableExtra("mr");
         adapter= new CustomAdapter(mr.getData().getCommittee_list(),getApplicationContext());
         listView.setAdapter(adapter);
@@ -112,19 +158,11 @@ public class Home extends AppCompatActivity {
                 ComLists comLists = (ComLists) adapterView.getItemAtPosition(i);
                 //Toast.makeText(Home.this, comLists.getId(), Toast.LENGTH_SHORT).show();
                 if(comLists.getId() != null && comLists.getId().equals("1")){
-                    ArrayList<FileLists> file_list=mr.getData().getFile_list();
-                    ArrayList<FileLists> new_file_list = new ArrayList<FileLists>();
-                    for (FileLists file:file_list){
-                        if (file.getCat_id().equals("1")){
-                            new_file_list.add(file);
-                        }
+                    if(Utils.isInternetConnected(con)){
+                        getFile();
+                    }else {
+                        //showOfflineData();
                     }
-                    Intent intent= new Intent(con,Datee.class);
-                    intent.putExtra("file_list", new_file_list);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-
-
                 }else if(comLists.getId() != null && comLists.getId().equals("2")){
                     Intent intent= new Intent(con,SubCommittee.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -132,10 +170,42 @@ public class Home extends AppCompatActivity {
                 }
             }
         });
+    }*/
+
+    public void getFile(){
+        Utils.showLoader(con);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<AllCatSubCatFiles> call = apiService.showlist(username, token);
+        call.enqueue(new Callback<AllCatSubCatFiles>() {
+            @Override
+            public void onResponse(Call<AllCatSubCatFiles> call, Response<AllCatSubCatFiles> response) {
+                final AllCatSubCatFiles mr = response.body();
+                ArrayList<FileLists> file_list=mr.getData().getFile_list();
+                ArrayList<FileLists> new_file_list = new ArrayList<FileLists>();
+                for (FileLists file:file_list){
+                    if (file.getCat_id().equals("1")){
+                        new_file_list.add(file);
+                    }
+                }
+                Utils.hideLoader();
+                Intent intent= new Intent(con,Datee.class);
+                intent.putExtra("file_list", new_file_list);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<AllCatSubCatFiles> call, Throwable t) {
+                // Log error here since request failed
+                Utils.hideLoader();
+                Log.e(TAG, t.toString());
+                Toast.makeText(con, "Webservice not response", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
-    private void showOfflineData(){
+    /*private void showOfflineData(){
         ArrayList<ComLists> comLists = dbTransaction.getCommList();
         adapter= new CustomAdapter(comLists,getApplicationContext());
         listView.setAdapter(adapter);
@@ -165,6 +235,6 @@ public class Home extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 
 }

@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fajlehrabbi.appmcci.Adapter.CustomAdapter;
 import com.example.fajlehrabbi.appmcci.Adapter.TaskAdapter;
 import com.example.fajlehrabbi.appmcci.Database.MCCIDBTransaction;
 import com.example.fajlehrabbi.appmcci.Model.AllCatSubCatFiles;
@@ -54,10 +55,15 @@ public class SubCommittee extends AppCompatActivity {
         tvfullName.setText(fullname);
 
         /*checkNetwork*/
-        showOfflineData();
+        if(Utils.isInternetConnected(con)){
+            showOnlineData();
+        }else{
+            showOfflineData();
+        }
     }
 
     private void showOnlineData(){
+        Utils.showLoader(con);
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<AllCatSubCatFiles> call = apiService.showlist(username, token);
         call.enqueue(new Callback<AllCatSubCatFiles>() {
@@ -86,6 +92,7 @@ public class SubCommittee extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
+                    Utils.hideLoader();
                 } else {
                     Toast.makeText(con, mr.getStatus(), Toast.LENGTH_LONG).show();
                 }
@@ -95,7 +102,9 @@ public class SubCommittee extends AppCompatActivity {
             @Override
             public void onFailure(Call<AllCatSubCatFiles> call, Throwable t) {
                 // Log error here since request failed
-                Log.e("ChatingActivity", t.toString());
+                Utils.hideLoader();
+                Log.e(TAG, t.toString());
+                Toast.makeText(con, "Webservice not response", Toast.LENGTH_SHORT).show();
             }
         });
     }

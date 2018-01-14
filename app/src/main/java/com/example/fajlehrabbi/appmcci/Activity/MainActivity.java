@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SigninResponse> call, Throwable t) {
                 // Log error here since request failed
+                Toast.makeText(con, "Webservice not response", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, t.toString());
             }
         });
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AllCatSubCatFiles> call, Throwable t) {
                 // Log error here since request failed
+                Toast.makeText(con, "Webservice not response", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, t.toString());
             }
         });
