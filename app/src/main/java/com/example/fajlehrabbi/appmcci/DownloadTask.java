@@ -28,13 +28,9 @@ public class DownloadTask {
     private ProgressDialog progressDialog;
     public DownloadTask(Context context, String downloadUrl) {
         this.context = context;
-
         this.downloadUrl = downloadUrl;
-
-
         downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf( '/' ),downloadUrl.length());//Create file name by picking download file name from URL
         Log.e(TAG, downloadFileName);
-
         //Start Downloading Task
         new DownloadingTask().execute();
     }
@@ -58,8 +54,8 @@ public class DownloadTask {
                 if (outputFile != null) {
                     progressDialog.dismiss();
                     String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
-                    Toast.makeText(context, "Downloaded Successfully", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "opening ..."+fileLocation, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Downloaded Successfully", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "opening ..."+fileLocation, Toast.LENGTH_SHORT).show();
 //                  new FileActivity().openFile(fileLocation);
                     openFile(fileLocation);
                 } else {
@@ -180,8 +176,8 @@ public class DownloadTask {
         } catch (Exception e) {
             /*Log.e("ERROR", e.getMessage());
             Log.e("ERROR", "No PDF Viewer is found.!!!");
-            System.out.println("No PDF Viewer is found.!!!");
-            Toast.makeText(con,"No PDF Viewer is found.",Toast.LENGTH_LONG).show();*/
+            System.out.println("No PDF Viewer is found.!!!");*/
+            Toast.makeText(context,"No Viewer found.",Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

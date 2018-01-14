@@ -1,12 +1,13 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by FajlehRabbi on 12/31/2017.
  */
 
-public class AllListResponse {
+public class AllListResponse implements Serializable{
     private String status;
     private String username;
     private String token;

@@ -1,12 +1,13 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Administrator on 12/28/2017.
  */
 
-public class FileData {
+public class FileData  implements Serializable{
     ArrayList<ComLists> committee_list = new ArrayList<ComLists>();
     ArrayList<SubComLists> sub_committee_list = new ArrayList<SubComLists>();
     ArrayList<FileLists> file_list = new ArrayList<FileLists>();

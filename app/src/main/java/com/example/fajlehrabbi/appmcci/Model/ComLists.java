@@ -1,16 +1,21 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 12/28/2017.
  */
 
-public class ComLists {
+public class ComLists implements Serializable{
     private String id;
     private String cat_name;
     private String status;
     private String position;
     private String type;
     private String short_code;
+
+    public ComLists() {
+    }
 
     public ComLists(String id, String cat_name, String status, String position, String type, String short_code) {
         this.id = id;

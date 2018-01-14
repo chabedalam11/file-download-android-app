@@ -1,10 +1,12 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by User on 4/10/2017.
  */
 
-public class SigninResponse {
+public class SigninResponse implements Serializable{
 
     private String status;
     private String status_code;

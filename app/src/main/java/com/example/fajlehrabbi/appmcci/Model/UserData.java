@@ -1,10 +1,12 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by User on 4/10/2017.
  */
 
-public class UserData {
+public class UserData implements Serializable {
    private String userid;
     private String username;
     private String ustatus;

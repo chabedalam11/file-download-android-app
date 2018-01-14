@@ -1,22 +1,16 @@
 package com.example.fajlehrabbi.appmcci.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.fajlehrabbi.appmcci.Datee;
 import com.example.fajlehrabbi.appmcci.Model.ComLists;
 import com.example.fajlehrabbi.appmcci.Model.SubComLists;
 import com.example.fajlehrabbi.appmcci.R;
-import com.example.fajlehrabbi.appmcci.SubCommittee;
-import com.example.fajlehrabbi.appmcci.Utilities.AppConstant;
-import com.example.fajlehrabbi.appmcci.Utilities.PersistData;
 
 import java.util.ArrayList;
 

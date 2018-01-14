@@ -1,10 +1,12 @@
 package com.example.fajlehrabbi.appmcci.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 12/28/2017.
  */
 
-public class SubComLists {
+public class SubComLists implements Serializable {
     private String id;
     private String subcat_name;
     private String cat_id;
@@ -15,6 +17,9 @@ public class SubComLists {
 
     public String getId() {
         return id;
+    }
+
+    public SubComLists() {
     }
 
     public SubComLists(String id, String subcat_name, String cat_id, String status, String position, String type, String short_code) {

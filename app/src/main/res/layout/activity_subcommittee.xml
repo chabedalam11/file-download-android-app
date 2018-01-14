@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.fajlehrabbi.appmcci.SubCommittee">
+    tools:context="com.example.fajlehrabbi.appmcci.Activity.SubCommittee">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:src="@drawable/logo"/>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvfullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -34,15 +34,7 @@
                 android:layout_marginTop="11dp"
                 android:text="MD.MAHFUZUR RAHMAN" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/textView2"
-                android:layout_alignRight="@+id/textView2"
-                android:layout_marginTop="2dp"
-                android:layout_below="@+id/textView2"
-                android:text="MCCI DMS Tools" />
+
 
         </RelativeLayout>
 
@@ -58,13 +50,13 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Home"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="home"/>
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Report" />
@@ -73,7 +65,6 @@
                 android:id="@+id/textVie"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Settinng" />
@@ -84,7 +75,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Logout" />
+                android:text="Logout"
+                android:onClick="logout"/>
 
         </LinearLayout>
 
