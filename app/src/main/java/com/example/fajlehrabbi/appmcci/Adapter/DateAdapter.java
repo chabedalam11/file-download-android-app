@@ -18,9 +18,9 @@ import java.util.ArrayList;
  * Created by Administrator on 12/12/2017.
  */
 
-public class DateAdapter extends ArrayAdapter<FileLists>{
+public class DateAdapter extends ArrayAdapter<String>{
 
-    private ArrayList<FileLists> dataSet;
+    private ArrayList<String> dataSet;
     Context mContext;
     public  Button button;
 
@@ -32,7 +32,7 @@ public class DateAdapter extends ArrayAdapter<FileLists>{
         ImageView info;
     }
 
-    public DateAdapter(ArrayList<FileLists> data, Context mContext) {
+    public DateAdapter(ArrayList<String> data, Context mContext) {
         super(mContext, R.layout.committee_list, data);
         this.dataSet = data;
         this.mContext=mContext;
@@ -44,7 +44,7 @@ public class DateAdapter extends ArrayAdapter<FileLists>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        FileLists fileLists = getItem(position);
+        String date = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -56,14 +56,14 @@ public class DateAdapter extends ArrayAdapter<FileLists>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.date_list, parent, false);
             button= (Button) (viewHolder.txtType = (Button) convertView.findViewById(R.id.type));
-           result=convertView;
+            result=convertView;
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
             result=convertView;
         }
         lastPosition = position;
-        viewHolder.txtType.setText(fileLists.getDate());
+        viewHolder.txtType.setText(date);
 
       /*  button.setOnClickListener(new View.OnClickListener() {
             @Override

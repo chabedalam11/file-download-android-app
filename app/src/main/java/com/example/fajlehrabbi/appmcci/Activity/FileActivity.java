@@ -58,15 +58,16 @@ public class FileActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             FileLists fileLists = (FileLists) adapterView.getItemAtPosition(i);
             String downloadUrl= fileLists.getFile_upload();
+            String extension = fileLists.getFile_extension();
             String downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf( '/' ),downloadUrl.length());//Create file name by picking download file name from URL
-                String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
-                if(!openFile(fileLocation)){
-                    if(Utils.isInternetConnected(con)){
-                        new DownloadTask(con,downloadUrl);
-                    }else {
-                        Toast.makeText(con, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                    }
+            String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
+            if(!openFile(fileLocation,extension)){
+                if(Utils.isInternetConnected(con)){
+                    new DownloadTask(con,downloadUrl,extension,"file");
+                }else {
+                    Toast.makeText(con, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }
+            }
             }
         });
     }
@@ -86,7 +87,7 @@ public class FileActivity extends AppCompatActivity {
         finish();
     }
 
-    public boolean openFile(String path) {
+    public boolean openFile(String path,String extension) {
         Log.d(TAG, path);
         File file = new File(Environment.getExternalStorageDirectory()+ File.separator + path);
         if(!file.exists()){
@@ -102,12 +103,22 @@ public class FileActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);*/
             //Uri uri = Uri.parse("file://"+file.getAbsolutePath());
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Intent.ACTION_VIEW);
-            String type = "application/msword";
-            intent.setDataAndType(uri, type);
-            startActivity(intent);
+            if(extension.equalsIgnoreCase("pdf")){
+                Toast.makeText(con, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }else {
+                Toast.makeText(con, "opening doc.....", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                String type = "application/msword";
+                intent.setDataAndType(uri, type);
+                startActivity(intent);
+            }
+
 
         } catch (Exception e) {
             /*Log.e("ERROR", e.getMessage());

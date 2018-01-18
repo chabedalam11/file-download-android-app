@@ -2,6 +2,7 @@ package com.example.fajlehrabbi.appmcci.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fajlehrabbi.appmcci.Database.MCCIDBTransaction;
+import com.example.fajlehrabbi.appmcci.DownloadTask;
 import com.example.fajlehrabbi.appmcci.Model.AllCatSubCatFiles;
 import com.example.fajlehrabbi.appmcci.Model.ComLists;
 import com.example.fajlehrabbi.appmcci.Model.FileLists;
@@ -27,6 +29,7 @@ import com.example.fajlehrabbi.appmcci.Utilities.PersistData;
 import com.example.fajlehrabbi.appmcci.Utils;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -182,6 +185,14 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<FileLists> file_list = mr.getData().getFile_list();
                     for(FileLists file : file_list){
                         dbTransaction.insertFILE(file);
+                        String downloadUrl= file.getFile_upload();
+                        String downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf( '/' ),downloadUrl.length());//Create file name by picking download file name from URL
+                        String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
+                        File f = new File(Environment.getExternalStorageDirectory()+ File.separator + fileLocation);
+                        if(!f.exists()){
+                            new DownloadTask(con,file.getFile_upload(),"","");
+                        }
+
                     }
 
 

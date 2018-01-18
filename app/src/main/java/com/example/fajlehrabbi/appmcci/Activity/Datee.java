@@ -41,20 +41,24 @@ public class Datee extends AppCompatActivity {
         tvfullName.setText(fullName);
 
         file_list= (ArrayList<FileLists>) getIntent().getSerializableExtra("file_list");
+        ArrayList<String> adapterDateList = new ArrayList<String>();
         for (FileLists file : file_list){
-            Log.d(TAG, "value : "+file.getDate());
+            if(!adapterDateList.contains(file.getDate())){
+                Log.d(TAG, "value : "+file.getDate());
+                adapterDateList.add(file.getDate());
+            }
         }
-        adapter= new DateAdapter(file_list,getApplicationContext());
+        adapter= new DateAdapter(adapterDateList,getApplicationContext());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FileLists fileLists = (FileLists) adapterView.getItemAtPosition(i);
-                //Toast.makeText(con, "val : "+fileLists.getFile_upload(), Toast.LENGTH_SHORT).show();
+                String date = (String) adapterView.getItemAtPosition(i);
+                //Toast.makeText(con, "val : "+date.getFile_upload(), Toast.LENGTH_SHORT).show();
                 ArrayList<FileLists> new_file_list = new ArrayList<FileLists>();
                 for (FileLists file : file_list){
-                    if(fileLists.getDate() != null && fileLists.getDate().equals(file.getDate())){
+                    if(date != null && date.equals(file.getDate())){
                         new_file_list.add(file);
                     }
                 }

@@ -24,11 +24,13 @@ public class DownloadTask {
     private static final String TAG = "Download Task";
     private Context context;
 
-    private String downloadUrl = "", downloadFileName = "";
+    private String downloadUrl = "", downloadFileName = "",extension="",flag="";
     private ProgressDialog progressDialog;
-    public DownloadTask(Context context, String downloadUrl) {
+    public DownloadTask(Context context, String downloadUrl,String extension,String flag) {
         this.context = context;
         this.downloadUrl = downloadUrl;
+        this.extension = extension;
+        this.flag = flag;
         downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf( '/' ),downloadUrl.length());//Create file name by picking download file name from URL
         Log.e(TAG, downloadFileName);
         //Start Downloading Task
@@ -57,7 +59,7 @@ public class DownloadTask {
                     //Toast.makeText(context, "Downloaded Successfully", Toast.LENGTH_SHORT).show();
                     //Toast.makeText(context, "opening ..."+fileLocation, Toast.LENGTH_SHORT).show();
 //                  new FileActivity().openFile(fileLocation);
-                    openFile(fileLocation);
+                    if(flag.equalsIgnoreCase("file")){openFile(fileLocation);}
                 } else {
 
                     new Handler().postDelayed(new Runnable() {
@@ -166,12 +168,22 @@ public class DownloadTask {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);*/
             //Uri uri = Uri.parse("file://"+file.getAbsolutePath());
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Intent.ACTION_VIEW);
-            String type = "application/msword";
-            intent.setDataAndType(uri, type);
-            context.startActivity(intent);
+            if(extension.equalsIgnoreCase("pdf")){
+                Toast.makeText(context, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
+            }else {
+                Toast.makeText(context, "opening doc.....", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                String type = "application/msword";
+                intent.setDataAndType(uri, type);
+                context.startActivity(intent);
+            }
+
 
         } catch (Exception e) {
             /*Log.e("ERROR", e.getMessage());
