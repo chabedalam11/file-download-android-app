@@ -1,14 +1,22 @@
 package com.example.fajlehrabbi.appmcci;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.fajlehrabbi.appmcci.Utilities.Permissions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,20 +53,17 @@ public class DownloadTask {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog=new ProgressDialog(context);
-            progressDialog.setMessage("Downloading...");
-            progressDialog.show();
+            //progressDialog=new ProgressDialog(context);
+            //progressDialog.setMessage("Downloading...");
+            //progressDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void result) {
             try {
                 if (outputFile != null) {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                     String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
-                    //Toast.makeText(context, "Downloaded Successfully", Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(context, "opening ..."+fileLocation, Toast.LENGTH_SHORT).show();
-//                  new FileActivity().openFile(fileLocation);
                     if(flag.equalsIgnoreCase("file")){openFile(fileLocation);}
                 } else {
 
@@ -103,22 +108,21 @@ public class DownloadTask {
                 if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
                             + " " + c.getResponseMessage());
-
                 }
-
-
                 //Get File if SD card is present
                 if (new CheckForSDCard().isSDCardPresent()) {
-
-                    apkStorage = new File(
+                /*//set run time permission
+                new Permissions(context).checkWriteExternalStoragePermission();*/
+                apkStorage = new File(
                             Environment.getExternalStorageDirectory() + "/"
                                     + "NKDROID FILES");
+                    apkStorage.mkdirs();
                 } else
                     Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
 
                 //If File is not present create directory
                 if (!apkStorage.exists()) {
-                    apkStorage.mkdir();
+                    apkStorage.mkdirs();
                     Log.e(TAG, "Directory Created.");
                 }
 
@@ -145,13 +149,11 @@ public class DownloadTask {
                 is.close();
 
             } catch (Exception e) {
-
                 //Read exception if something went wrong
                 e.printStackTrace();
                 outputFile = null;
                 Log.e(TAG, "Download Error Exception " + e.getMessage());
             }
-
             return null;
         }
     }
@@ -159,24 +161,44 @@ public class DownloadTask {
     public void openFile(String path) {
         Log.d("filePath ", path);
         File file = new File(Environment.getExternalStorageDirectory()+ File.separator + path);
-        Uri uri = Uri.fromFile(file);
+        Uri uri = FileProvider.getUriForFile(
+                context,
+                context.getApplicationContext()
+                        .getPackageName() + ".provider", file);
         Log.d("uri", uri.toString());
 
         try {
-            /*Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*/
-            //Uri uri = Uri.parse("file://"+file.getAbsolutePath());
             if(extension.equalsIgnoreCase("pdf")){
-                Toast.makeText(context, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(context, "opening pdf.....", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(uri, "application/pdf");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
+                context.startActivity(intent);*/
+
+                Toast.makeText(context, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                // create new Intent
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                // set flag to give temporary permission to external app to use your FileProvider
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                /*// generate URI, I defined authority as the application ID in the Manifest, the last param is file I want to open
+                String uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+*/
+                // I am opening a PDF file so I give it a valid MIME type
+                intent.setDataAndType(uri, "application/pdf");
+
+                // validate that the device can open your File!
+                PackageManager pm = context.getPackageManager();
+                if (intent.resolveActivity(pm) != null) {
+                    context.startActivity(intent);
+                }
+
             }else {
                 Toast.makeText(context, "opening doc.....", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_VIEW);
                 String type = "application/msword";
@@ -186,14 +208,10 @@ public class DownloadTask {
 
 
         } catch (Exception e) {
-            /*Log.e("ERROR", e.getMessage());
-            Log.e("ERROR", "No PDF Viewer is found.!!!");
-            System.out.println("No PDF Viewer is found.!!!");*/
             Toast.makeText(context,"No Viewer found.",Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
-
 
 
 }

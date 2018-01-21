@@ -30,7 +30,7 @@ public class FileAdapter extends ArrayAdapter<FileLists>{
         TextView txtName;
         TextView txtType;
         TextView txtVersion;
-        ImageView info;
+        ImageView ivFile;
     }
 
     public FileAdapter(ArrayList<FileLists> data, Context mContext) {
@@ -59,6 +59,7 @@ public class FileAdapter extends ArrayAdapter<FileLists>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.file_list, parent, false);
             viewHolder.txtType = (Button) convertView.findViewById(R.id.type);
+            viewHolder.ivFile = (ImageView) convertView.findViewById(R.id.ivFile);
             result=convertView;
             convertView.setTag(viewHolder);
         } else {
@@ -70,6 +71,11 @@ public class FileAdapter extends ArrayAdapter<FileLists>{
         lastPosition = position;
 
         viewHolder.txtType.setText(fileLists.getName()+"."+fileLists.getFile_extension());
+        if(fileLists.getFile_extension().equalsIgnoreCase("pdf")){
+            viewHolder.ivFile.setBackgroundResource(R.drawable.pdf);
+        }else {
+            viewHolder.ivFile.setBackgroundResource(R.drawable.doc2);
+        }
 
         return convertView;
     }

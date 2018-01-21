@@ -11,11 +11,12 @@
         android:layout_margin="10dp">
 
         <ImageView
+            android:id="@+id/ivFile"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:paddingLeft="10dp"
             android:layout_gravity="center"
-            android:src="@drawable/doc2"/>
+            />
 
         <Button
             android:id="@+id/type"

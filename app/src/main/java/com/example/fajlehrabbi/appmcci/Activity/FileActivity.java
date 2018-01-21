@@ -2,8 +2,10 @@ package com.example.fajlehrabbi.appmcci.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -94,32 +96,56 @@ public class FileActivity extends AppCompatActivity {
             Log.d(TAG, "File not found");
             return false;
         }
-        Uri uri = Uri.fromFile(file);
+//        Uri uri = Uri.fromFile(file);
+        Uri uri = FileProvider.getUriForFile(
+                con,
+                con.getApplicationContext()
+                        .getPackageName() + ".provider", file);
         Log.d(TAG, uri.toString());
 
         try {
-            /*Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*/
-            //Uri uri = Uri.parse("file://"+file.getAbsolutePath());
             if(extension.equalsIgnoreCase("pdf")){
                 Toast.makeText(con, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                // create new Intent
                 Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                // set flag to give temporary permission to external app to use your FileProvider
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                /*// generate URI, I defined authority as the application ID in the Manifest, the last param is file I want to open
+                String uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+*/
+                // I am opening a PDF file so I give it a valid MIME type
+                intent.setDataAndType(uri, "application/pdf");
+
+                // validate that the device can open your File!
+                PackageManager pm = con.getPackageManager();
+                if (intent.resolveActivity(pm) != null) {
+                    startActivity(intent);
+                }
+
+
+
+
+
+
+
+                /*Toast.makeText(con, "opening pdf.....", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(uri, "application/pdf");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                con.startActivity(intent);*/
             }else {
                 Toast.makeText(con, "opening doc.....", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_VIEW);
                 String type = "application/msword";
                 intent.setDataAndType(uri, type);
-                startActivity(intent);
+                con.startActivity(intent);
             }
-
-
         } catch (Exception e) {
             /*Log.e("ERROR", e.getMessage());
             Log.e("ERROR", "No PDF Viewer is found.!!!");

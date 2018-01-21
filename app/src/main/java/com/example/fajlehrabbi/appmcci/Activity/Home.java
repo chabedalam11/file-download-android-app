@@ -22,6 +22,7 @@ import com.example.fajlehrabbi.appmcci.R;
 import com.example.fajlehrabbi.appmcci.Retrofit.ApiClient;
 import com.example.fajlehrabbi.appmcci.Retrofit.ApiInterface;
 import com.example.fajlehrabbi.appmcci.Utilities.AppConstant;
+import com.example.fajlehrabbi.appmcci.Utilities.Permissions;
 import com.example.fajlehrabbi.appmcci.Utilities.PersistData;
 import com.example.fajlehrabbi.appmcci.Utils;
 
@@ -49,6 +50,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         con = this;
+        //set run time permission
+        new Permissions(con).checkWriteExternalStoragePermission();
         dbTransaction= new MCCIDBTransaction(con);
         listView=(ListView)findViewById(R.id.list);
         home=(TextView)findViewById(R.id.home);

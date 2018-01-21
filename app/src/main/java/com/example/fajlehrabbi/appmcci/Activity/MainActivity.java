@@ -192,10 +192,7 @@ public class MainActivity extends AppCompatActivity {
                         if(!f.exists()){
                             new DownloadTask(con,file.getFile_upload(),"","");
                         }
-
                     }
-
-
                     Utils.mr = mr;
                     progressBar.setVisibility(View.GONE);
                     Intent intent= new Intent(con,Home.class);
