@@ -131,7 +131,9 @@ public class SubCommittee extends AppCompatActivity {
             }
         });
     }
-
+    public void home1(View view){
+        finish();
+    }
     public void home(View view){
         Intent intent= new Intent(con,Home.class);
         intent.putExtra("mr", Utils.mr);

@@ -81,6 +81,9 @@ public class FileActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+    public void home1(View view){
+        finish();
+    }
 
     public void logout(View view){
         PersistData.setStringData(con, AppConstant.API_TOKEN, "");

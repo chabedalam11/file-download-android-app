@@ -33,6 +33,18 @@
                 android:layout_marginRight="18dp"
                 android:layout_marginTop="11dp"
                 android:text="MD.MAHFUZUR RAHMAN" />
+            <TextView
+                android:id="@+id/textVi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/tvfullName"
+                android:layout_alignRight="@+id/tvfullName"
+                android:layout_below="@+id/tvfullName"
+                android:layout_marginEnd="22dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="22dp"
+                android:text="Logout"
+                android:onClick="logout"/>
 
         </RelativeLayout>
 
@@ -45,36 +57,22 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="Home"
                 android:textStyle="bold"
                 android:onClick="home"/>
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Report" />
+
 
             <TextView
-                android:id="@+id/textVie"
+                android:id="@+id/textVi1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
-                android:text="Settinng" />
-
-            <TextView
-                android:id="@+id/textVi"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Logout"
-                android:onClick="logout"/>
+                android:text="Back"
+                android:onClick="home1"/>
 
         </LinearLayout>
 
