@@ -115,7 +115,7 @@ public class Home extends AppCompatActivity {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(con, "Click saHome", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(con, "Click saHome", Toast.LENGTH_SHORT).show();
             }
         });
 

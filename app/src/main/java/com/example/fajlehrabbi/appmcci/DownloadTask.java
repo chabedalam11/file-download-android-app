@@ -46,36 +46,41 @@ public class DownloadTask {
     }
 
     private class DownloadingTask extends AsyncTask<Void, Void, Void> {
-
         File apkStorage = null;
         File outputFile = null;
-
         @Override
         protected void onPreExecute() {
+            if(!flag.equals("")){
+                Utils.showLoader(context);
+            }
             super.onPreExecute();
-            //progressDialog=new ProgressDialog(context);
-            //progressDialog.setMessage("Downloading...");
-            //progressDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void result) {
+            if(!flag.equals("")){
+                Utils.hideLoader();
+            }
             try {
                 if (outputFile != null) {
                     //progressDialog.dismiss();
                     String fileLocation="NKDROID FILES"+ File.separator +downloadFileName;
-                    if(flag.equalsIgnoreCase("file")){openFile(fileLocation);}
+                    if(flag.equalsIgnoreCase("file")){
+                        openFile(fileLocation);
+                    }else if(flag.equalsIgnoreCase("sync")){
+                        Toast.makeText(context, "sync complete", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
 
                         }
                     }, 3000);
-
                     Log.e(TAG, "Download Failed");
-
+                    if(!flag.equals("")){
+                        Toast.makeText(context, "Download Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -89,7 +94,9 @@ public class DownloadTask {
                     }
                 }, 3000);
                 Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
-
+                if(!flag.equals("")){
+                    Toast.makeText(context, "Download Failed", Toast.LENGTH_SHORT).show();
+                }
             }
 
 
@@ -109,6 +116,9 @@ public class DownloadTask {
                     Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
                             + " " + c.getResponseMessage());
                 }
+
+                InputStream connectionIS = c.getInputStream();//Get InputStream for connection
+                InputStream is =connectionIS;
                 //Get File if SD card is present
                 if (new CheckForSDCard().isSDCardPresent()) {
                 /*//set run time permission
@@ -119,7 +129,6 @@ public class DownloadTask {
                     apkStorage.mkdirs();
                 } else
                     Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
-
                 //If File is not present create directory
                 if (!apkStorage.exists()) {
                     apkStorage.mkdirs();
@@ -136,7 +145,6 @@ public class DownloadTask {
 
                 FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
 
-                InputStream is = c.getInputStream();//Get InputStream for connection
 
                 byte[] buffer = new byte[1024];//Set buffer type
                 int len1 = 0;//init length
@@ -153,6 +161,10 @@ public class DownloadTask {
                 e.printStackTrace();
                 outputFile = null;
                 Log.e(TAG, "Download Error Exception " + e.getMessage());
+                if(!flag.equals("")){
+                    Toast.makeText(context, "Download Failed", Toast.LENGTH_SHORT).show();
+                    Utils.hideLoader();
+                }
             }
             return null;
         }

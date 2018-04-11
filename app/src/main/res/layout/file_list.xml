@@ -5,34 +5,55 @@
     android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/date"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:layout_gravity=""
+        android:orientation="horizontal"
+        android:background="@color/date">
 
-        <ImageView
-            android:id="@+id/ivFile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:paddingLeft="10dp"
-            android:layout_gravity="center"
-            />
-
-        <Button
-            android:id="@+id/type"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/white"
-            android:text="MD.MAHFUZUR RAHMAN"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:background="@color/date">
+
+            <ImageView
+                android:id="@+id/ivFile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:paddingLeft="10dp"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:id="@+id/type"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:text="MD.MAHFUZUR RAHMAN"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+        </LinearLayout>
+
+
+
+        <ImageButton
+            android:id="@+id/btnSync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_sync_black_24dp"/>
 
     </LinearLayout>
+
+
 
 </LinearLayout>
 

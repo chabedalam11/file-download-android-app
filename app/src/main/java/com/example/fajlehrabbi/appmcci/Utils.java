@@ -24,7 +24,6 @@ public class Utils {
     public static void showLoader(Context context){
         dialog = ProgressDialog.show(context, "",
                 "Loading. Please wait...", true);
-        //dialog.setCancelable(false);
     }
 
     public static void hideLoader(){
